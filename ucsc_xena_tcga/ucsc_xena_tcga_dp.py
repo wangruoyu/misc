@@ -26,17 +26,20 @@ def datafile_transform(datadir,gzdatafilename,saveFileName):
     '''ndf = pd.DataFrame(df.T,index=df.columns, columns=df.index)
     print(ndf.info)'''
     wf = open(os.path.join(datadir,saveFileName),'w')
-    wf.write('@relation '+cancerName+'\n\n')
+    if (saveFileName.endswith(".arff")):
+        wf.write('@relation '+cancerName+'\n\n') #需要生成arff文件格式
     #print(df.columns)
     for col in df.columns:
         #print(col)
         if col == "sample":
-            #print(df[col])
-            #print(type(df[col]))
-            for index,feature in df[col].items():
-                wf.write("@attribute "+feature+" real\n")
-            wf.write("@attribute class {"+cancerName+",normal}\n\n")
-            wf.write("@data\n")
+            if (saveFileName.endswith(".arff")):
+                #需要生成arff文件格式
+                #print(df[col])
+                #print(type(df[col]))
+                for index,feature in df[col].items():
+                    wf.write("@attribute "+feature+" real\n")
+                wf.write("@attribute class {"+cancerName+",normal}\n\n")
+                wf.write("@data\n")
         else:
             '''
             #TCGA-AB-2899-03
@@ -70,7 +73,9 @@ if __name__=='__main__':
             gznames.append(filename)
     #gzdatafilename='HiSeqV2.gz'
     #saveFileName='HiSeqV2.arff'
+    print("datadir: %s" %(datadir))
     for gzdatafilename in gznames:
-        saveFileName = gzdatafilename.replace('.gz','.arff')
+        #saveFileName = gzdatafilename.replace('.gz','.arff')
+        saveFileName = gzdatafilename.replace('.gz','.csv')
         print("process %s and write to %s." %(gzdatafilename,saveFileName))
         datafile_transform(datadir,gzdatafilename,saveFileName)
