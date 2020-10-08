@@ -49,10 +49,11 @@ def datafile_transform(datadir,gzdatafilename,saveFileName):
             #编号01~09表示肿瘤，10~19表示正常对照
             '''
             cn = col.split('-')
+            #文件处理代码再修改下，cancer是0，正常是1，不用文字
             if (int(cn[3])) <= 9:
-                tag = cancerName
+                tag = '0'
             else:
-                tag = 'normal'
+                tag = '1'
             values=''
             for index,value in df[col].items():
                 if values == '':
